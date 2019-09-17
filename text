@@ -1,0 +1,62 @@
+网络也是属于高延迟的ＩＯ，python多线程在执行多阻塞高延迟IO时可以提升程序效率
+
+下载文件程序
+需求：模拟开启多个线程，在多资源情况下共同下载一个文件
+提供的数据：
+    resource_library = ["/home/tarena/桌面/",
+"/home/tarena/文档/",
+"/home/tarena/音乐/",
+"/home/tarena/下载/",
+"/home/tarena/视频/",
+"/home/tarena/图片/",
+"/home/tarena/模板/",
+]
+构思：
+    1.确定所需要下载的文件名称，并查找包含文件的资源
+1.  filename = input('请输入需要下载的文件名称：')
+3.  filr_resource = []
+2.  def filename_find():
+        for item in resource_library:
+            if os.path.exists(item+filename):(1.如果文件存在这个资源路径中，返回值为Ｔure，我们需要将这些资源路径存放至一个
+                                              容器中，以便后续的读取操作，[提问：容器有哪些？]，这是我创建一个列表来存放)
+4.          filr_resourc.append(item+filename)
+    有两种可能：1.能够找到包含资源的文件;2.找不到包含资源的文件
+5.  def is_exists():
+        num = len(filr_resource)
+        if num == 0:(找不到包含资源的文件)
+            print('需要下载的文件未搜索到资源')
+            os._exit(0)?
+    3.确定线程数量及各线程所负责下载的模块（我们需要获取有多少资源，以及我们所需要下载的文件大小是多少）
+6.  size = os.path.getsize(filr_resource[0])(列表中的每一个元素都包含我们所需要下载的文件，所以我们可以随意取一个元素来判断一下
+                                             我们所需要下载的文件大小，我认为使用第一个元素即（filr_resource[0]）来判断比较
+                                             好，因为当只找到一个资源的时候，列表中只有一个元素，如果索引写成其他值的话会出错)
+7.  block_size = size // num + 1  （+1是为了防止出现我们分割的模块大小出现比实际需求小的情况）
+
+    4.对包含文件的资源进行读取,将各线程读取到的内容写入同一模块
+8. def write_and_read(path,num):
+        f = open(path,'rb')
+        seek_types = block_size * num
+        f.seek(seek_types)
+        size = block_size
+        fd.seek(block_size * num)
+        read_list = []
+        while True:
+            if size < 2048:
+                data = f.read(size)
+                read_list.append(date)
+                break
+            else:
+                data = f.read(2048)
+                read_list.append(date)
+                size -= 1024
+        data = ''.join(read_list)
+        lock.acquire() 上锁
+        fd.write(data)
+        lock.release() 解锁
+9.  jobs = []
+    for i in range(len(explorer)):
+        t = Thread(target = load,args=(explorer[i],i))
+        jobs.append(t)
+        t.start()
+    for i in jobs:
+    i.join()
